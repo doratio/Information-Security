@@ -200,8 +200,8 @@ module.exports = {
             for (var i = 0; i < rowsA; i++) {
                 var t = 0;
                 for (var j = 0; j < rowsB; j++)
-                    t += A[i][j] * B[j][k];
-                C[i][k] = t % 256;
+                    t ^= (A[i][j] * B[j][k]) % 256;
+                C[i][k] = t;
             }
         }
         return C;
@@ -212,7 +212,11 @@ module.exports = {
             m = A[0].length
 
         for (var i = 0; i < n; i++) {
-            for (var j = 0; j < m; j++) A[i][j] = Math.round(A[i][j]);
+            for (var j = 0; j < m; j++) {
+                // console.log(A[i][j])
+                A[i][j] = Math.abs(A[i][j])
+                // console.log(A[i][j])
+            };
         }
 
         return A

@@ -50,12 +50,10 @@ module.exports = {
     },
 
     createNewKey: function (matrix_key, number_round) {
-        // new_matrix_key = [[],[],[],[]]
-
         for (let j = 0; j < 4; j++) {
             for (let l = 0; l < 4; l++) {
-                if (j === 0) {
-                    matrix_key[j][l] = matrix_key[j][l] ^ matrix_key[j][(l == 0) ? 4 : l - 1] ^ ((number_round + 1) * 2)
+                if (j == 0) {
+                    matrix_key[j][l] = matrix_key[j][l] ^ matrix_key[3][(l == 0) ? 3 : l - 1] ^ ((number_round + 1) * 2)
                 } else {
                     matrix_key[j][l] = matrix_key[j][l] ^ matrix_key[j - 1][l]
                 }
