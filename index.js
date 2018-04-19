@@ -1,6 +1,6 @@
 const square = require('./square/square')
 
-str = "i said Hello!!!!)"
+str = "i said Hello!!!!"
 key = "passwordpassword"
 
 data = square.encode(str, key);

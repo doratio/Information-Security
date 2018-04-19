@@ -1,3 +1,4 @@
+const gf = require('./GF')
 module.exports = {
     TransMatrix: function (A) {
         var m = A.length,
@@ -180,13 +181,15 @@ module.exports = {
             C = [];
         for (var i = 0; i < m; i++) {
             C[i] = [];
-            for (var j = 0; j < n; j++)
+            for (var j = 0; j < n; j++) {
                 C[i][j] = A[i][j] ^ B[i][j];
+                // console.log(A[i][j], B[i][j], C[i][j])
+            }
         }
         return C;
     },
 
-    MultiplyMatrixModulo2in8: function (A, B) {
+    MultiplyMatrixGF256: function (A, B) {
         var rowsA = A.length,
             colsA = A[0].length,
             rowsB = B.length,
@@ -200,25 +203,10 @@ module.exports = {
             for (var i = 0; i < rowsA; i++) {
                 var t = 0;
                 for (var j = 0; j < rowsB; j++)
-                    t ^= (A[i][j] * B[j][k]) % 256;
+                    t ^= gf.FGMult(A[i][j], B[j][k]);
                 C[i][k] = t;
             }
         }
         return C;
-    },
-
-    Round: function (A) {
-        var n = A.length,
-            m = A[0].length
-
-        for (var i = 0; i < n; i++) {
-            for (var j = 0; j < m; j++) {
-                // console.log(A[i][j])
-                A[i][j] = Math.abs(A[i][j])
-                // console.log(A[i][j])
-            };
-        }
-
-        return A
     }
 }

@@ -7,6 +7,8 @@ module.exports = {
             data_matrix = abstract.createMatrix(data),
             key_matrix = abstract.createMatrix(pass)
 
+
+
         function nonLinearTransformation(A) {
             for (let i = 0; i < 4; i++) {
                 for (let j = 0; j < 4; j++) {
@@ -17,18 +19,14 @@ module.exports = {
         }
 
         function round(data_matrix_round, key_matrix_round) {
-            data_matrix_round = matrix.MultiplyMatrixModulo2in8(abstract.CONST, data_matrix_round);
+            data_matrix_round = matrix.MultiplyMatrixGF256(abstract.CONST, data_matrix_round);
             data_matrix_round = nonLinearTransformation(data_matrix_round);
             data_matrix_round = matrix.TransMatrix(data_matrix_round);
             data_matrix_round = matrix.SumMatrixModulo2(data_matrix_round, key_matrix_round);
             return data_matrix_round;
         }
 
-        data_matrix = matrix.Round(matrix.MultiplyMatrixModulo2in8(
-                matrix.InverseMatrix(
-                    abstract.CONST
-                )
-            , data_matrix));
+        data_matrix = matrix.MultiplyMatrixGF256(abstract.CONST_1, data_matrix);
         data_matrix = matrix.SumMatrixModulo2(data_matrix, key_matrix);
 
         for (let i = 0; i < 8; i++) {
@@ -63,25 +61,21 @@ module.exports = {
             data_matrix_round = matrix.SumMatrixModulo2(data_matrix_round, key_matrix_round);
             data_matrix_round = matrix.TransMatrix(data_matrix_round);
             data_matrix_round = nonLinearTransformation(data_matrix_round);
-            data_matrix_round = matrix.MultiplyMatrixModulo2in8(
-                    matrix.InverseMatrix(
-                        abstract.CONST
-                    )
-                , data_matrix_round);
+            data_matrix_round = matrix.MultiplyMatrixGF256(abstract.CONST_1, data_matrix_round);
             return data_matrix_round;
         }
 
-        key[8] = key_matrix
+        key[0] = key_matrix
         for (let i = 0; i < 8; i++) {
-            key[8-i-1] = key_matrix = abstract.createNewKey(key_matrix, i)
+            key[i+1] = abstract.createNewKey(key[i], i)
         }
 
-        for (let i = 0; i < 8; i++) {
+        for (let i = 8; i > 0; i--) {
             data_matrix = round(data_matrix, key[i])
         }
 
-        data_matrix = matrix.SumMatrixModulo2(data_matrix, key[8]);
-        data_matrix = matrix.MultiplyMatrixModulo2in8(abstract.CONST, data_matrix)
+        data_matrix = matrix.SumMatrixModulo2(data_matrix, key[0]);
+        data_matrix = matrix.MultiplyMatrixGF256(abstract.CONST, data_matrix)
 
         for (let i = 0; i < data_matrix.length; i++) {
             for (let j = 0; j < data_matrix[i].length; j++) {
