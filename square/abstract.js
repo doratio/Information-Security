@@ -22,7 +22,7 @@ module.exports = {
         0x3C, 0xC8, 0x99, 0x04, 0x8E, 0xE0, 0xD7, 0x7D, 0x85, 0xBB, 0x40, 0x2C, 0x3A, 0x45, 0xF1, 0x42,
         0x65, 0x20, 0x41, 0x18, 0x72, 0x25, 0x93, 0x70, 0x36, 0x05, 0xF2, 0x0B, 0xA3, 0x79, 0xEC, 0x08,
         0x27, 0x31, 0x32, 0xB6, 0x7C, 0xB0, 0x0A, 0x73, 0x5B, 0x7B, 0xB7, 0x81, 0xD2, 0x0D, 0x6A, 0x26,
-        0x9E, 0x58, 0x9C, 0x83, 0x74, 0xB3, 0xAC, 0x30, 0x7A, 0x69, 0x7, 0x0F, 0xAE, 0x21, 0xDE, 0xD0,
+        0x9E, 0x58, 0x9C, 0x83, 0x74, 0xB3, 0xAC, 0x30, 0x7A, 0x69, 0x77, 0x0F, 0xAE, 0x21, 0xDE, 0xD0,
         0x2E, 0x97, 0x10, 0xA4, 0x98, 0xA8, 0xD4, 0x68, 0x2D, 0x62, 0x29, 0x6D, 0x16, 0x49, 0x76, 0xC7,
         0xE8, 0xC1, 0x96, 0x37, 0xE5, 0xCA, 0xF4, 0xE9, 0x63, 0x12, 0xC2, 0xA6, 0x14, 0xBC, 0xD3, 0x28,
         0xAF, 0x2F, 0xE6, 0x24, 0x52, 0xC6, 0xA0, 0x09, 0xBD, 0x8C, 0xCF, 0x5D, 0x11, 0x5F, 0x01, 0xC5,
@@ -33,34 +33,40 @@ module.exports = {
     ],
 
     createMatrix: function (array) {
-        const lack = array % 16;
-
-        for (let i = 0; i < lack; i++) {
-            array = array.unshift('')
-        }
-
         const matrix = [
-            [array.charCodeAt(0), array.charCodeAt(1), array.charCodeAt(2), array.charCodeAt(3)],
-            [array.charCodeAt(4), array.charCodeAt(5), array.charCodeAt(6), array.charCodeAt(7)],
-            [array.charCodeAt(8), array.charCodeAt(9), array.charCodeAt(10), array.charCodeAt(11)],
-            [array.charCodeAt(12), array.charCodeAt(13), array.charCodeAt(14), array.charCodeAt(15)]
-        ]
+            [array.charCodeAt(0) || 0, array.charCodeAt(1) || 0, array.charCodeAt(2) || 0, array.charCodeAt(3) || 0],
+            [array.charCodeAt(4) || 0, array.charCodeAt(5) || 0, array.charCodeAt(6) || 0, array.charCodeAt(7) || 0],
+            [array.charCodeAt(8) || 0, array.charCodeAt(9) || 0, array.charCodeAt(10) || 0, array.charCodeAt(11) || 0],
+            [array.charCodeAt(12) || 0, array.charCodeAt(13) || 0, array.charCodeAt(14) || 0, array.charCodeAt(15) || 0]
+        ];
 
         return matrix;
     },
 
     createNewKey: function (matrix_key, number_round) {
         let key = [];
+
         for (let j = 0; j < 4; j++) {
             key[j] = []
             for (let l = 0; l < 4; l++) {
-                if (j == 0) {
-                    key[j][l] = matrix_key[j][l] ^ matrix_key[3][(l == 0) ? 3 : l - 1] ^ ((number_round + 1) * 2)
-                } else {
+                key[j][l] = (j === 0) ?
+                    matrix_key[j][l] ^ matrix_key[3][(l == 0) ? 3 : l - 1] ^ ((number_round + 1) * 2) :
                     key[j][l] = matrix_key[j][l] ^ matrix_key[j - 1][l]
-                }
             }
         }
+
         return key;
+    },
+
+    matrixToString: function (matrix) {
+        str = '';
+
+        for (let i = 0; i < matrix.length; i++) {
+            for (let j = 0; j < matrix[i].length; j++) {
+                str += String.fromCharCode(matrix[i][j])
+            }
+        }
+
+        return str;
     }
 }

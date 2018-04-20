@@ -73,16 +73,20 @@ module.exports = {
             B = [],
             denom = 1,
             exchanges = 0;
+
         for (var i = 0; i < N; ++i) {
             B[i] = [];
+
             for (var j = 0; j < N; ++j)
                 B[i][j] = A[i][j];
         }
         for (var i = 0; i < N - 1; ++i) {
             var maxN = i,
                 maxValue = Math.abs(B[i][i]);
+
             for (var j = i + 1; j < N; ++j) {
                 var value = Math.abs(B[j][i]);
+
                 if (value > maxValue) {
                     maxN = j;
                     maxValue = value;
@@ -115,6 +119,7 @@ module.exports = {
         A = A.slice(0)
         var N = A.length,
             adjA = [];
+
         for (var i = 0; i < N; i++) {
             adjA[i] = [];
             for (var j = 0; j < N; j++) {
@@ -137,20 +142,22 @@ module.exports = {
                 adjA[i][j] = sign * this.Determinant(B);
             }
         }
+
         return adjA;
     },
 
     InverseMatrix: function (A) {
         A = A.slice(0)
         var det = this.Determinant(A);
-        if (det == 0)
-            return false;
+
+        if (det == 0) return false;
         var N = A.length,
             A = this.AdjugateMatrix(A);
         for (var i = 0; i < N; i++) {
             for (var j = 0; j < N; j++)
                 A[i][j] /= det;
         }
+
         return A;
     },
 
@@ -160,10 +167,9 @@ module.exports = {
             rowsB = B.length,
             colsB = B[0].length,
             C = [];
-        if (colsA != rowsB)
-            return false;
-        for (var i = 0; i < rowsA; i++)
-            C[i] = [];
+
+        if (colsA != rowsB) return false;
+        for (var i = 0; i < rowsA; i++) C[i] = [];
         for (var k = 0; k < colsB; k++) {
             for (var i = 0; i < rowsA; i++) {
                 var t = 0;
@@ -172,6 +178,7 @@ module.exports = {
                 C[i][k] = t;
             }
         }
+
         return C;
     },
 
@@ -179,13 +186,14 @@ module.exports = {
         var m = A.length,
             n = A[0].length,
             C = [];
+
         for (var i = 0; i < m; i++) {
             C[i] = [];
             for (var j = 0; j < n; j++) {
                 C[i][j] = A[i][j] ^ B[i][j];
-                // console.log(A[i][j], B[i][j], C[i][j])
             }
         }
+
         return C;
     },
 
@@ -195,10 +203,9 @@ module.exports = {
             rowsB = B.length,
             colsB = B[0].length,
             C = [];
-        if (colsA != rowsB)
-            return false;
-        for (var i = 0; i < rowsA; i++)
-            C[i] = [];
+
+        if (colsA != rowsB) return false;
+        for (var i = 0; i < rowsA; i++) C[i] = [];
         for (var k = 0; k < colsB; k++) {
             for (var i = 0; i < rowsA; i++) {
                 var t = 0;
@@ -207,6 +214,7 @@ module.exports = {
                 C[i][k] = t;
             }
         }
+
         return C;
     }
 }
